@@ -1,21 +1,22 @@
-﻿using System.Diagnostics;
-using BagShop.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using BagStore.Models;
 
-namespace BagShop.Controllers
+namespace BagStore.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly BagContext context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(BagContext ctx)
         {
-            _logger = logger;
+            context = ctx;
         }
 
+        // الصفحة الرئيسية
         public IActionResult Index()
         {
-            return View();
+            var bags = context.Bags.OrderBy(b => b.BagName).ToList();
+            return View(bags);
         }
 
         public IActionResult Privacy()
@@ -23,10 +24,53 @@ namespace BagShop.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        // ===== LOGIN =====
+        [HttpGet]
+        public IActionResult Login()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            if (HttpContext.Session.GetInt32("ID") != null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Login(string email, string password)
+        {
+            var user = context.Users
+                .FirstOrDefault(u => u.Email == email && u.Password == password);
+
+            if (user != null)
+            {
+                HttpContext.Session.SetInt32("ID", user.UserId);
+
+                if (user.UserId == 1)
+                    return RedirectToAction("Index", "Admin");
+
+                return RedirectToAction("Index", "User");
+            }
+
+            return View("LoginFailed");
+        }
+
+        // ===== SIGN UP =====
+        [HttpGet]
+        public IActionResult SignUp()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult SignUp(User u)
+        {
+            if (!ModelState.IsValid)
+                return View(u);
+
+            context.Users.Add(u);
+            context.SaveChanges();
+
+            return View("Success");
         }
     }
 }
