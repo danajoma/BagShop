@@ -7,66 +7,109 @@ namespace BagStore.Controllers
     {
         private readonly BagContext context;
 
-        public UserController(BagContext ctx)
-        {
-            context = ctx;
-        }
+        public UserController(BagContext ctx) => context = ctx;
 
-        // حماية الصفحة
+        // ===== HOME USER =====
         public IActionResult Index()
         {
             if (HttpContext.Session.GetInt32("ID") == null)
-                return RedirectToAction("Login", "Home");
+                return RedirectToAction("Index", "Home");
 
             return View();
         }
 
-        // عرض كل الشنط
-        public IActionResult BagsList()
+        // ===== SEARCH =====
+        [HttpGet]
+        public IActionResult Search()
         {
-            var bags = context.Bags.OrderBy(b => b.BagName).ToList();
-            return View(bags);
+            if (HttpContext.Session.GetInt32("ID") == null)
+                return RedirectToAction("Index", "Home");
+
+            return View();
         }
 
-        // شنط المستخدم فقط
-        public IActionResult MyBags()
+        [HttpPost]
+        public IActionResult Search(string key)
+        {
+            if (HttpContext.Session.GetInt32("ID") == null)
+                return RedirectToAction("Index", "Home");
+
+            List<Bag> bags = context.Bags
+                .Where(b => b.BagName.Contains(key))
+                .ToList();
+
+            if (bags != null && bags.Count > 0)
+                return View("BagSearchResult", bags);
+
+            return View("Index");
+        }
+
+        // ===== LIST ALL BAGS =====
+        [HttpGet]
+        public IActionResult BagList()
+        {
+            List<Bag> L = context.Bags
+                .OrderBy(b => b.BagName)
+                .ToList();
+
+            return View(L);
+        }
+
+        // ===== CHANGE PASSWORD =====
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            if (HttpContext.Session.GetInt32("ID") == null)
+                return RedirectToAction("Index", "Home");
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ChangePassword(string p1, string p2, string p3)
         {
             int? id = HttpContext.Session.GetInt32("ID");
 
             if (id == null)
-                return RedirectToAction("Login", "Home");
+                return RedirectToAction("Index", "Home");
 
-            var myBags = context.Bags
-                .Where(b => b.UserId == id)
+            if (p2 == p3)
+            {
+                if (p1 == p2)
+                    return View("Similar");
+
+                BagStore.Models.User temp = context.Users.Find(id);
+
+                if (temp != null)
+                {
+                    temp.Password = p2;
+                    context.Users.Update(temp);
+                    context.SaveChanges();
+                }
+
+                return View("Success");
+            }
+
+            return View("Wrong");
+        }
+
+        // ===== MY BAGS =====
+        public IActionResult MyBags()
+        {
+            if (HttpContext.Session.GetInt32("ID") == null)
+                return RedirectToAction("Index", "Home");
+
+            int? ID = HttpContext.Session.GetInt32("ID");
+
+            List<Bag> bags = context.Bags
+                .Where(b => b.UserId == ID)
+                .OrderBy(b => b.BagName)
                 .ToList();
 
-            return View(myBags);
+            return View("BagList", bags);
         }
 
-        // تغيير كلمة السر
-        [HttpPost]
-        public IActionResult ChangePassword(string oldPass, string newPass, string confirmPass)
-        {
-            int? id = HttpContext.Session.GetInt32("ID");
-
-            var user = context.Users.Find(id);
-
-            if (user == null)
-                return RedirectToAction("Login", "Home");
-
-            if (newPass != confirmPass)
-                return View("Wrong");
-
-            if (oldPass == newPass)
-                return View("Similar");
-
-            user.Password = newPass;
-            context.SaveChanges();
-
-            return View("Success");
-        }
-
-        // تسجيل خروج
+        // ===== LOGOUT =====
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
@@ -74,3 +117,4 @@ namespace BagStore.Controllers
         }
     }
 }
+
