@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BagStore.Models;
+using BagShop.Models;
 
-namespace BagStore.Controllers
+namespace BagShop.Controllers
 {
     public class AdminController : Controller
     {
@@ -16,10 +16,10 @@ namespace BagStore.Controllers
         // حماية
         public IActionResult Index()
         {
-            if (HttpContext.Session.GetInt32("ID") == null)
-                return RedirectToAction("Login", "Home");
+            var bags = context.Bags.ToList();
 
-            return View();
+            // بنحكيله صراحة روح افتح الفيو اللي بمجلد User وخذ معك الليستا
+            return View("~/Views/User/Index.cshtml", bags);
         }
 
         // عرض كل الشنط
@@ -34,19 +34,26 @@ namespace BagStore.Controllers
 
         // ===== ADD =====
         [HttpGet]
-        public IActionResult Add()
+        public IActionResult Create()
         {
             ViewBag.Users = context.Users.ToList();
             return View();
         }
 
         [HttpPost]
-        public IActionResult Add(Bag bag)
+        public IActionResult Create(Bag bag)
         {
-            context.Bags.Add(bag);
-            context.SaveChanges();
+            if (ModelState.IsValid)
+            {
+                context.Bags.Add(bag);
+                context.SaveChanges();
 
-            return RedirectToAction("BagsList");
+                // إعادة التوجيه الصريح للأكشن الرئيسي
+                return RedirectToAction("Index", "Admin");
+            }
+
+            ViewBag.Users = context.Users.ToList();
+            return View("Create", bag);
         }
 
         // ===== EDIT =====
@@ -54,38 +61,42 @@ namespace BagStore.Controllers
         public IActionResult Edit(int id)
         {
             var bag = context.Bags.Find(id);
+
+            if (bag == null)
+                return NotFound();
+
             return View(bag);
         }
 
         [HttpPost]
         public IActionResult Edit(Bag bag)
         {
+            // 1. تحديث البيانات في قاعدة البيانات
             context.Bags.Update(bag);
             context.SaveChanges();
 
-            return RedirectToAction("BagsList");
+            // 2. التعديل السحري: بعد نجاح التعديل، يرجع لصفحة الجدول اللي بمجلد User
+            return RedirectToAction("Index", "User");
         }
 
         // ===== DELETE =====
         public IActionResult Delete(int id)
         {
             var bag = context.Bags.Find(id);
-            context.Bags.Remove(bag);
-            context.SaveChanges();
 
-            return RedirectToAction("BagsList");
+            if (bag != null)
+            {
+                // 1. حذف الشنطة من قاعدة البيانات
+                context.Bags.Remove(bag);
+                context.SaveChanges();
+            }
+
+            // 2. التعديل السحري: بعد الحذف بنجاح، يرجع فوراً لصفحة الجدول اللي بمجلد User
+            return RedirectToAction("Index", "User");
         }
 
         // بحث
-        [HttpPost]
-        public IActionResult Search(string key)
-        {
-            var result = context.Bags
-                .Where(b => b.BagName.Contains(key))
-                .ToList();
-
-            return View("BagsList", result);
-        }
+       
 
         // Logout
         public IActionResult Logout()

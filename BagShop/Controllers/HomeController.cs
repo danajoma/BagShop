@@ -1,5 +1,4 @@
 ﻿using BagShop.Models;
-using BagStore.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Linq;
@@ -41,7 +40,7 @@ namespace BagStore.Controllers
         [HttpPost]
         public IActionResult Login(string email, string password)
         {
-            BagStore.Models.User u =
+            BagShop.Models.User u =
                 context.Users.FirstOrDefault(u => u.Email == email && u.Password == password);
 
             if (u != null)
@@ -66,7 +65,7 @@ namespace BagStore.Controllers
         public IActionResult SignUp() => View();
 
         [HttpPost]
-        public IActionResult SignUp(User u, string confirmPassword)
+        public IActionResult SignUp(BagShop.Models.User u, string confirmPassword)
         {
             if (!ModelState.IsValid)
             {

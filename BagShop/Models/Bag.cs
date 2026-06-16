@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BagStore.Models
+namespace BagShop.Models
 {
     public class Bag
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
-namespace BagStore.Models
+namespace BagShop.Models
 {
     public class BagContext : DbContext
     {
@@ -86,7 +86,9 @@ namespace BagStore.Models
                     Password = "789"
                 }
 
+
             );
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

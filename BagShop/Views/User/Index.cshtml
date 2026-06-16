@@ -1,0 +1,77 @@
+﻿@model List<BagShop.Models.Bag>
+@{
+    Layout = null;
+    // جلب الـ ID والـ Role من السيشين لمعرفة طبيعة الحساب الحالي
+    int? currentUserId = Context.Session.GetInt32("ID");
+}
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>متجر الحقائب الفاخرة 🛍️</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+</head>
+<body class="bg-light" style="direction: rtl; text-align: right;">
+
+    <div class="container my-5">
+        <div class="d-flex justify-content-between align-items-center bg-white p-4 rounded shadow-sm mb-4">
+            <div>
+                <h2 class="fw-bold text-primary">تسوق أحدث الحقائب المتاحة 👜</h2>
+                <p class="text-muted mb-0">تصفح التشكيلة واضغط شراء لإضافة المنتج إلى حسابك فوراً.</p>
+            </div>
+            <div class="d-flex gap-2">
+            </div>
+        </div>
+
+        <div class="card shadow border-0 p-4">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>رقم المنتج</th>
+                            <th>اسم الشنطة</th>
+                            <th>الماركة</th>
+                            <th>اللون</th>
+                            <th>السعر</th>
+                            <th>حالة المنتج / إجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var bag in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold">@bag.BagId</td>
+                                    <td>@bag.BagName</td>
+                                    <td>@bag.Brand</td>
+                                    <td><span class="badge bg-secondary">@(bag.Color ?? "عام")</span></td>
+                                    <td class="text-success fw-bold">@bag.Price $</td>
+                                    <td>
+                                        @if (bag.UserId != null)
+                                        {
+                                            <span class="badge bg-success p-2">تم الشراء بنجاح 🎉</span>
+                                        }
+                                        else
+                                        {
+                                            <a href="/User/Buy/@bag.BagId" class="btn btn-sm btn-primary fw-bold px-4">شراء الآن 🛒</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-muted py-4 lead">لا توجد حقائب معروضة حالياً.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

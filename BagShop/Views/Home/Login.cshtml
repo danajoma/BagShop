@@ -1,0 +1,43 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>تسجيل الدخول 🔐</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+</head>
+<body class="bg-light" style="direction: rtl; text-align: right;">
+
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card shadow border-0 p-4 mt-5">
+                    <h2 class="text-center mb-4 fw-bold text-secondary">تسجيل الدخول</h2>
+
+                    <form action="/Home/Login" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">البريد الإلكتروني</label>
+                            <input type="email" name="email" class="form-control" placeholder="name@example.com" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">كلمة المرور</label>
+                            <input type="password" name="password" class="form-control" placeholder="******" required />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2 my-2 fw-bold">دخول 🔓</button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <p class="text-muted">ليس لديك حساب؟ <a href="/Home/SignUp" class="text-decoration-none fw-bold">أنشئ حسابك الآن</a></p>
+                        <a href="/Home/Index" class="text-decoration-none text-secondary small">← العودة للرئيسية</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

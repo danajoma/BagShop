@@ -1,7 +1,7 @@
-﻿using BagShop.Models;
+﻿
 using System.ComponentModel.DataAnnotations;
 
-namespace BagStore.Models
+namespace BagShop.Models
 {
     public class User
     {

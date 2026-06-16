@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using BagStore.Models;
+using BagShop.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

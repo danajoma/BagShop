@@ -1,0 +1,42 @@
+﻿@model Bag
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>تأكيد الحذف 🗑️</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+</head>
+<body class="bg-light" style="direction: rtl; text-align: right;">
+
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow border-0 p-4 border-top border-danger border-4">
+                    <h2 class="text-center text-danger fw-bold mb-4">تأكيد حذف الحقيبة 🗑️</h2>
+                    <p class="lead text-center text-muted mb-4">هل أنت متأكد تماماً من رغبتك في حذف هذه الحقيبة نهائياً من النظام؟</p>
+
+                    <div class="bg-light p-3 rounded mb-4 text-right">
+                        <p class="mb-2"><strong>رقم الحقيبة:</strong> @Model.BagId</p>
+                        <p class="mb-2"><strong>اسم الحقيبة:</strong> @Model.BagName</p>
+                        <p class="mb-2"><strong>الماركة:</strong> @Model.Brand</p>
+                        <p class="mb-0"><strong>السعر:</strong> <span class="text-success fw-bold">@Model.Price $</span></p>
+                    </div>
+
+                    <form action="/Admin/DeleteConfirmed" method="post">
+                        <input type="hidden" name="BagId" value="@Model.BagId" />
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-danger w-50 py-2 fw-bold">نعم، قم بالحذف 🗑️</button>
+                            <a href="/Admin/Index" class="btn btn-secondary w-50 py-2 fw-bold">إلغاء والرجوع</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
