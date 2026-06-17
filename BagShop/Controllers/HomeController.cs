@@ -39,24 +39,23 @@ namespace BagShop.Controllers
         [HttpPost]
         public IActionResult Login(string email, string password)
         {
-            BagShop.Models.User u =
-                context.Users.FirstOrDefault(u => u.Email == email && u.Password == password);
+            // 1. البحث عن المستخدم في قاعدة البيانات
+            BagShop.Models.User u = context.Users
+                .FirstOrDefault(u => u.Email == email && u.Password == password);
 
+            // 2. إذا وجدنا المستخدم (بياناته صحيحة)
             if (u != null)
             {
-                HttpContext.Session.SetInt32("ID", u.UserId);
-
-                if (HttpContext.Session.GetInt32("ID") == 1)
-                {
-                    return RedirectToAction("Index", "Admin");
-                }
-                else
-                {
-                    return RedirectToAction("Index", "User");
-                }
+                // نأخذه فوراً "مشي" لجدول الإدارة والشنط
+                return RedirectToAction("Index", "Home");
             }
 
-            return View("LoginFailed");
+            // 3. إذا لم نجده (بياناته خطأ أو الحساب غير موجود)
+            // نضع رسالة تنبيه تظهر بالصفحة
+            ViewBag.ErrorMessage = "الإيميل أو كلمة المرور غير صحيحة! ❌";
+
+            // ونعيد عرض صفحة اللوجن نفسها ليعيد المحاولة بدلاً من فتح صفحة فشل مستقلة
+            return View();
         }
 
         // ===== SIGN UP =====
