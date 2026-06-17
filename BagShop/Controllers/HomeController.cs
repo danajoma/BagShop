@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Linq;
 
-namespace BagStore.Controllers
+namespace BagShop.Controllers
 {
     public class HomeController : Controller
     {
