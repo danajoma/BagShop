@@ -13,13 +13,11 @@ namespace BagShop.Controllers
             context = ctx;
         }
 
-      
+
         public IActionResult Index()
         {
-            var bags = context.Bags.ToList();
-
-            // بنحكيله صراحة روح افتح الفيو اللي بمجلد User وخذ معك الليستا
-            return View("~/Views/User/Index.cshtml", bags);
+            // بدلاً من فتح صفحة اليوزر الكروت، نخليه يفتح صفحة الـ BagsList اللي أرسلتيها هس
+            return RedirectToAction("BagsList");
         }
 
         // عرض كل الشنط
@@ -76,6 +74,7 @@ namespace BagShop.Controllers
             context.SaveChanges();
 
             // 2. التعديل السحري: بعد نجاح التعديل، يرجع لصفحة الجدول اللي بمجلد User
+            
             return RedirectToAction("Index", "User");
         }
 
