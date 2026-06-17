@@ -1,0 +1,37 @@
+﻿@model List<Bag>
+
+@{
+    ViewData["Title"] = "قائمة إدارة الشنط";
+}
+
+<div class="container mt-4" dir="rtl" style="text-align: right;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>لوحة تحكم الإدارة - قائمة الشنط</h2>
+        <a asp-action="Create" class="btn btn-success">إضافة شنطة جديدة +</a>
+    </div>
+
+    <table class="table table-bordered table-striped text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>اسم الشنطة</th>
+                <th>الماركة (Brand)</th>
+                <th>اسم المستخدم (المالك)</th>
+                <th>العمليات الإدارية</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.BagName</td>
+                    <td>@item.Brand</td>
+                    <td>@(item.User != null ? item.User.FullName : "لا يوجد مستخدم")</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.BagId" class="btn btn-sm btn-warning">تعديل</a>
+                        <a asp-action="Delete" asp-route-id="@item.BagId" class="btn btn-sm btn-danger">حذف</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

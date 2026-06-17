@@ -21,7 +21,6 @@ namespace BagStore.Controllers
             return View(L);
         }
 
-        public IActionResult Privacy() => View();
 
         // ===== LOGIN =====
         [HttpGet]
@@ -64,51 +63,26 @@ namespace BagStore.Controllers
         [HttpGet]
         public IActionResult SignUp() => View();
 
+      
         [HttpPost]
-        public IActionResult SignUp(BagShop.Models.User u, string confirmPassword)
+        public IActionResult SignUp(User u, string confirmPassword)
         {
             if (!ModelState.IsValid)
             {
-                var errors = ModelState
-                    .Where(e => e.Value.Errors.Count > 0)
-                    .Select(e => new
-                    {
-                        Field = e.Key,
-                        Errors = e.Value.Errors.Select(er => er.ErrorMessage).ToList()
-                    });
-
-                string errorDetails = "❌ النموذج غير صالح:<br><ul>";
-
-                foreach (var error in errors)
-                {
-                    errorDetails += $"<li><strong>{error.Field}</strong>: {string.Join(", ", error.Errors)}</li>";
-                }
-
-                errorDetails += "</ul>";
-
-                return Content(errorDetails, "text/html");
+                return View(u);
             }
 
-            if (u.Password == confirmPassword)
-            {
-                context.Users.Add(u);
-                context.SaveChanges();
+           
 
-                ViewBag.UserID = u.UserId;
-                return View("Successful");
-            }
+            context.Users.Add(u);
+            context.SaveChanges();
 
-            return View("UnsuccessfulSignUp");
+            ViewBag.UserID = u.UserId;
+
+            return View("Successful");
         }
 
-        // ===== ERROR =====
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel
-            {
-                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
-            });
-        }
+        
+
     }
 }

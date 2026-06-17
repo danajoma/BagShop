@@ -13,7 +13,7 @@ namespace BagShop.Controllers
             context = ctx;
         }
 
-        // حماية
+      
         public IActionResult Index()
         {
             var bags = context.Bags.ToList();
@@ -32,7 +32,7 @@ namespace BagShop.Controllers
             return View(bags);
         }
 
-        // ===== ADD =====
+        // ===== Create =====
         [HttpGet]
         public IActionResult Create()
         {
@@ -95,14 +95,9 @@ namespace BagShop.Controllers
             return RedirectToAction("Index", "User");
         }
 
-        // بحث
+     
        
 
-        // Logout
-        public IActionResult Logout()
-        {
-            HttpContext.Session.Clear();
-            return RedirectToAction("Index", "Home");
-        }
+        
     }
 }

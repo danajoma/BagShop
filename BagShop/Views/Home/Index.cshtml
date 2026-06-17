@@ -38,20 +38,10 @@
                             <div class="card-body text-center p-4">
 
                                 <div class="mb-3" style="height: 200px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                                    @if (bag.BagId == 1 || bag.BagId == 2 || bag.BagId == 3)
-                                    {
-                                        <img src="~/images/@(bag.BagId).png"
-                                             class="img-fluid rounded-3"
-                                             alt="@bag.BagName"
-                                             style="max-height: 100%; max-width: 100%; object-fit: cover;" />
-                                    }
-                                    else
-                                    {
-                                        <img src="~/images/default.png"
-                                             class="img-fluid rounded-3"
-                                             alt="صورة احتياطية"
-                                             style="max-height: 100%; max-width: 100%; object-fit: cover;" />
-                                    }
+                                    <img src="/images/@(bag.BagId).png"
+                                         class="img-fluid rounded-3"
+                                         alt="@bag.BagName"
+                                         style="max-height: 100%; max-width: 100%; object-fit: cover;" />
                                 </div>
 
                                 <h4 class="card-title fw-bold">@bag.BagName</h4>
