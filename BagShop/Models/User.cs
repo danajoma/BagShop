@@ -1,6 +1,6 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
-
+using System.Collections.Generic;
 namespace BagShop.Models
 {
     public class User
