@@ -46,15 +46,22 @@ namespace BagShop.Controllers
             // 2. إذا وجدنا المستخدم (بياناته صحيحة)
             if (u != null)
             {
-                // نأخذه فوراً "مشي" لجدول الإدارة والشنط
-                return RedirectToAction("Index", "Home");
+                // ===: حفظ بيانات المستخدم في السيشن ===
+                HttpContext.Session.SetInt32("ID", u.UserId);
+
+                // إذا كان نظامك يعتمد على أن المستخدم رقم 1 هو الأدمن:
+                if (u.UserId == 1)
+                {
+                    return RedirectToAction("Index", "Admin");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "User");
+                }
             }
 
-            // 3. إذا لم نجده (بياناته خطأ أو الحساب غير موجود)
-            // نضع رسالة تنبيه تظهر بالصفحة
+            // 3. إذا لم نجده (بياناته خطأ)
             ViewBag.ErrorMessage = "الإيميل أو كلمة المرور غير صحيحة! ❌";
-
-            // ونعيد عرض صفحة اللوجن نفسها ليعيد المحاولة بدلاً من فتح صفحة فشل مستقلة
             return View();
         }
 
